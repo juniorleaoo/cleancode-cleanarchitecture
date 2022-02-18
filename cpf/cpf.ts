@@ -1,5 +1,5 @@
-function validateInputType(cpf: string) {
-    return cpf !== null && cpf !== undefined;
+function isInputTypeString(cpf: string) {
+    return typeof cpf === 'string';
 }
 
 function validateInputLenght(cpf: string) {
@@ -7,16 +7,12 @@ function validateInputLenght(cpf: string) {
 }
 
 function removeSpecialCharacters(cpf: string) {
-    return cpf
-        .replace('.', '')
-        .replace('.', '')
-        .replace('-', '')
-        .replace(' ', '');
+    return cpf.replace(/[\.\-]/g, '');
 }
 
 function allDigitsAreEqual(cpf: string) {
     const firstDigit = cpf[0];
-    return cpf.split('').every(digit => digit === firstDigit);
+    return [...cpf].every(digit => digit === firstDigit);
 }
 
 function calculateFirstChecker(cpf: string): number {
@@ -24,9 +20,9 @@ function calculateFirstChecker(cpf: string): number {
     return calculateChecker(firstNineDigits);
 }
 
-function calculateSecondChecker(cpf: string, firstChecker: number): number {
-    const firstNineDigits = cpf.slice(0, 9);
-    return calculateChecker(firstNineDigits + firstChecker);
+function calculateSecondChecker(cpf: string): number {
+    const firstNineDigits = cpf.slice(0, 10);
+    return calculateChecker(firstNineDigits);
 }
 
 function calculateChecker(cpf: string): number {
@@ -47,25 +43,21 @@ function reverseString(value: string) {
 
 function calculateCheckers(cpf: string): string {
     const firstChecker = calculateFirstChecker(cpf);
-    const secondChecker = calculateSecondChecker(cpf, firstChecker);
+    const secondChecker = calculateSecondChecker(cpf);
     return `${firstChecker}${secondChecker}`
 }
 
 export function validate(cpf: string) {
-    try {
-        if (!validateInputType(cpf) || !validateInputLenght(cpf)) {
-            return false;
-        }
-
-        const cpfWithoutSpecialCharacters = removeSpecialCharacters(cpf);
-
-        if (allDigitsAreEqual(cpfWithoutSpecialCharacters)) {
-            return false;
-        }
-
-        const checkers = cpfWithoutSpecialCharacters.slice(9, 11);
-        return checkers === calculateCheckers(cpfWithoutSpecialCharacters);
-    } catch (e) {
+    if (!cpf || !validateInputLenght(cpf) || !isInputTypeString(cpf)) {
         return false;
     }
+
+    const cpfWithoutSpecialCharacters = removeSpecialCharacters(cpf);
+
+    if (allDigitsAreEqual(cpfWithoutSpecialCharacters)) {
+        return false;
+    }
+
+    const checkers = cpfWithoutSpecialCharacters.slice(9, 11);
+    return checkers === calculateCheckers(cpfWithoutSpecialCharacters);
 }

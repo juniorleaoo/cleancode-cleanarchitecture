@@ -2,6 +2,25 @@ import { validate } from './cpf';
 
 describe('validate', () => {
 
+  const invalidCpfWithSameDigits = [
+    '000.000.000-00',
+    '111.111.111-11',
+    '222.222.222-22',
+    '333.333.333-33',
+    '444.444.444-44',
+    '555.555.555-55',
+    '666.666.666-66',
+    '777.777.777-77',
+    '888.888.888-88',
+    '999.999.999-99'
+  ]
+
+   describe.each(invalidCpfWithSameDigits)('deve retornar false para digitos iguais', (cpf) => {
+    it(cpf, () => {
+      expect(validate(cpf)).toBeFalsy();
+    })
+  });
+
   describe('passando string', () => {
 
     it('deve retornar true para um CPF valido', () => {
@@ -9,19 +28,6 @@ describe('validate', () => {
       expect(validate('93541134780')).toBeTruthy();
       expect(validate('253.226.570-10')).toBeTruthy();
       expect(validate('25322657010')).toBeTruthy();
-    });
-
-    it('deve retornar false para digitos repetidos', () => {
-      expect(validate('000.000.000-00')).toBeFalsy();
-      expect(validate('111.111.111-11')).toBeFalsy();
-      expect(validate('222.222.222-22')).toBeFalsy();
-      expect(validate('333.333.333-33')).toBeFalsy();
-      expect(validate('444.444.444-44')).toBeFalsy();
-      expect(validate('555.555.555-55')).toBeFalsy();
-      expect(validate('666.666.666-66')).toBeFalsy();
-      expect(validate('777.777.777-77')).toBeFalsy();
-      expect(validate('888.888.888-88')).toBeFalsy();
-      expect(validate('999.999.999-99')).toBeFalsy();
     });
 
     it('deve retornar true para um CPF valido que começa com 0', () => {
